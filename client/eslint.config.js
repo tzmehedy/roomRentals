@@ -8,6 +8,7 @@ export default [
   { ignores: ['dist'] },
   {
     files: ['**/*.{js,jsx}'],
+    node:true,
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -32,6 +33,7 @@ export default [
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
+        
       ],
     },
   },
