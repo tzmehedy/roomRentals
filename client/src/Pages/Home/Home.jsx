@@ -1,10 +1,13 @@
 import React from 'react';
+import Categories from '../../Components/Categories/Categories';
 
 const Home = () => {
     return (
-        <div>
-            <h1>This is home</h1>
+      <div>
+        <div className='flex justify-center'>
+          <Categories></Categories>
         </div>
+      </div>
     );
 };
 
