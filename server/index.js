@@ -34,6 +34,11 @@ async function run() {
 
     const roomsCollections = client.db("RoomRentals").collection("allRooms")
 
+    app.get("/rooms", async(req,res)=>{
+        const result = await roomsCollections.find().toArray()
+        res.send(result)
+    })
+
     
     
 
