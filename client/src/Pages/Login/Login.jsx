@@ -55,7 +55,7 @@ const Login = () => {
             </div>
             <small>
               <span className="text-slate-400">Don't have an account yet?</span>{" "}
-              <Link className="underline hover:text-[#F09167]" to={"signup"}>
+              <Link className="underline hover:text-[#F09167]" to={"/signup"}>
                 Sign Up
               </Link>
             </small>
