@@ -35,8 +35,11 @@ async function run() {
     const roomsCollections = client.db("RoomRentals").collection("allRooms")
 
     app.get("/rooms", async(req,res)=>{
-        const result = await roomsCollections.find().toArray()
-        res.send(result)
+      const category = req.query.category
+      let query = {}
+      if(category && category !== 'null') query = {category}
+      const result = await roomsCollections.find(query).toArray()
+      res.send(result)
     })
 
     
