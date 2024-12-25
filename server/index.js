@@ -41,10 +41,6 @@ async function run() {
       const result = await roomsCollections.find(query).toArray()
       res.send(result)
     })
-
-    
-    
-
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );

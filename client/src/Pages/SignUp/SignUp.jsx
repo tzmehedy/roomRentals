@@ -1,8 +1,45 @@
+import axios from 'axios';
 import React from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router';
+import useAuth from '../../Hooks/useAuth';
+import { toast } from 'react-toastify';
+
 
 const SignUp = () => {
+  const { createUser, profileUpdate ,loading,user} = useAuth();
+  const handelRegister = async(e) =>{
+    e.preventDefault()
+    const form = e.target 
+    const name = form.name.value 
+    const email = form.email.value 
+    const password = form.password.value 
+    const image = form.image.files[0] 
+
+    const formData = new FormData()
+    formData.append("image", image)
+
+    const url = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_imgbb_API_key
+    }`
+
+    const {data} = await axios.post(url,formData)
+    
+
+    try{
+      await createUser(email,password)
+      await profileUpdate(name, data.data.display_url)
+      toast.success("Sign Up successful")
+      console.log(user)
+
+    }catch(err){
+      toast.error(err.message)
+    }
+    
+
+    
+
+  }
     return (
       <div className="flex justify-center items-center  ">
         <div className="space-y-10 bg-[#F3F4F6] p-16">
@@ -13,7 +50,7 @@ const SignUp = () => {
             </span>
           </div>
 
-          <form className="space-y-5">
+          <form onSubmit={handelRegister} className="space-y-5">
             <div className="space-y-3">
               <label htmlFor="name">Name</label> <br />
               <input
