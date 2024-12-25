@@ -15,6 +15,12 @@ const Rooms = () => {
             return data
         }
     })
+
+    if(isLoading) return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-bars loading-lg text-[#F09167]"></span>
+      </div>
+    );
     return (
       <div>
         {rooms.length > 0 ? (
