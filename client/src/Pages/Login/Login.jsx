@@ -1,12 +1,14 @@
 import React from 'react';
 import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../Hooks/useAuth';
 import { toast } from 'react-toastify';
 
 const Login = () => {
   const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate()
+  const location = useLocation()
+  
 
   const handelLogin = async(e)=>{
     e.preventDefault()
@@ -20,7 +22,7 @@ const Login = () => {
     try{
       await login(email,password)
       toast.success("Login Successful")
-      navigate("/")
+      navigate(`${location?.state?.from ? location.state.from.pathname : "/"}`)
 
     }catch(err){
       
@@ -32,7 +34,9 @@ const Login = () => {
     try {
       await loginWithGoogle()
       toast.success("Login Successful");
-      navigate("/");
+       navigate(
+         `${location?.state?.from ? location.state.from.pathname : "/"}`
+       );
     } catch (err) {
      
       toast.error(err.message);

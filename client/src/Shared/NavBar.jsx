@@ -86,9 +86,9 @@ const NavBar = () => {
                 )}
               </ul>
             </div>
-            <a className="btn btn-ghost text-2xl">
+            <Link to={"/"} className="btn btn-ghost text-2xl">
               Room <span className="text-[#F09167]">Rental</span>
-            </a>
+            </Link>
           </div>
 
           <div className="navbar-end space-x-5">
