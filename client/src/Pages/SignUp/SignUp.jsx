@@ -1,13 +1,15 @@
 import axios from 'axios';
 import React from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import useAuth from '../../Hooks/useAuth';
 import { toast } from 'react-toastify';
 
 
 const SignUp = () => {
-  const { createUser, profileUpdate ,loading,user} = useAuth();
+  const { createUser, profileUpdate, loading, user, loginWithGoogle } =
+    useAuth();
+  const navigate = useNavigate()
   const handelRegister = async(e) =>{
     e.preventDefault()
     const form = e.target 
@@ -30,16 +32,25 @@ const SignUp = () => {
       await createUser(email,password)
       await profileUpdate(name, data.data.display_url)
       toast.success("Sign Up successful")
-      console.log(user)
-
+      navigate("/")
     }catch(err){
       toast.error(err.message)
     }
-    
-
-    
-
   }
+
+  const handelSignUpWithGoogle = async() =>{
+    try{
+      await loginWithGoogle()
+      toast.success("Sign Up successful")
+       navigate("/")
+
+    }catch(err){
+      toast.error(err.message)
+
+    }
+  }
+
+
     return (
       <div className="flex justify-center items-center  ">
         <div className="space-y-10 bg-[#F3F4F6] p-16">
@@ -104,7 +115,7 @@ const SignUp = () => {
             <p className="text-slate-400">Sign Up With Social Accounts</p>
 
             <div className="">
-              <button className="btn border border-slate-300 w-full flex justify-center items-center">
+              <button onClick={handelSignUpWithGoogle} className="btn border border-slate-300 w-full flex justify-center items-center">
                 {" "}
                 <FcGoogle className="text-2xl"></FcGoogle>Continue With Google
               </button>

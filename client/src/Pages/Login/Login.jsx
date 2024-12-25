@@ -1,8 +1,48 @@
 import React from 'react';
 import { FcGoogle } from "react-icons/fc";
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import useAuth from '../../Hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const Login = () => {
+  const { login, loginWithGoogle } = useAuth();
+  const navigate = useNavigate()
+
+  const handelLogin = async(e)=>{
+    e.preventDefault()
+    const form = e.target 
+    
+    const email = form.email.value 
+    const password = form.password.value 
+
+   
+
+    try{
+      await login(email,password)
+      toast.success("Login Successful")
+      navigate("/")
+
+    }catch(err){
+      
+      toast.error(err.message)
+    }
+  }
+
+  const handelLoginWithGoogle = async() =>{
+    try {
+      await loginWithGoogle()
+      toast.success("Login Successful");
+      navigate("/");
+    } catch (err) {
+     
+      toast.error(err.message);
+    }
+    
+    
+  }
+
+
+
     return (
       <div className="flex justify-center items-center  ">
         <div className="space-y-10 bg-[#F3F4F6] p-16">
@@ -13,7 +53,7 @@ const Login = () => {
             </span>
           </div>
 
-          <form className="space-y-5">
+          <form onSubmit={handelLogin} className="space-y-5">
             <div className="space-y-3">
               <label htmlFor="email">Email Address</label> <br />
               <input
@@ -48,7 +88,7 @@ const Login = () => {
             <p className="text-slate-400">Login With Social Accounts</p>
 
             <div className="">
-              <button className="btn border border-slate-300 w-full flex justify-center items-center">
+              <button onClick={handelLoginWithGoogle} className="btn border border-slate-300 w-full flex justify-center items-center">
                 {" "}
                 <FcGoogle className="text-2xl"></FcGoogle>Continue With Google
               </button>

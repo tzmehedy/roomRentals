@@ -2,18 +2,42 @@ import React from 'react';
 import { CgMenu } from "react-icons/cg";
 import { FaUserCircle } from "react-icons/fa";
 import { Link } from 'react-router';
+import useAuth from '../Hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const NavBar = () => {
+  const { user, logOut } = useAuth();
+
+  const handelLogout = async () => {
+    try {
+      await logOut();
+      toast.success("Logout Successful");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
     const navLinks = (
       <>
-        <li>
-          <Link to={"/login"}>Login</Link>
-        </li>
-        <li>
-          <Link to={"/signup"}>Sign Up</Link>
-        </li>
+        {user ? (
+          <li>
+            <button onClick={handelLogout} className="btn">
+              Logout
+            </button>
+          </li>
+        ) : (
+          <>
+            <li>
+              <Link to={"/login"}>Login</Link>
+            </li>
+            <li>
+              <Link to={"/signup"}>Sign Up</Link>
+            </li>
+          </>
+        )}
       </>
     );
+
+    
     return (
       <div className="fixed z-50 w-full border-b-2 border-slate-300">
         <div className="navbar bg-base-100">
@@ -43,15 +67,23 @@ const NavBar = () => {
                 tabIndex={0}
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
-                <li>
-                  <Link to={"/login"}>Login</Link>
-                </li>
-                <li>
-                  <Link to={"/signup"}>Sign Up</Link>
-                </li>
-                <li>
-                  <Link>Host Your Home</Link>
-                </li>
+                {user ? (
+                  <li>
+                    <button onClick={handelLogout} className="btn">Logout</button>
+                  </li>
+                ) : (
+                  <>
+                    <li>
+                      <Link to={"/login"}>Login</Link>
+                    </li>
+                    <li>
+                      <Link to={"/signup"}>Sign Up</Link>
+                    </li>
+                    <li>
+                      <Link>Host Your Home</Link>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
             <a className="btn btn-ghost text-2xl">
@@ -65,11 +97,20 @@ const NavBar = () => {
             </button>
             <div className="dropdown dropdown-end">
               <button
-                className="flex space-x-2 border-2 px-2 py-1 rounded-2xl  "
+                className="flex justify-center items-center space-x-2 border-2 px-2 py-1 rounded-2xl  "
                 tabIndex={0}
               >
                 <CgMenu className="text-2xl"></CgMenu>
-                <FaUserCircle className="text-2xl"></FaUserCircle>
+
+                {user ? (
+                  <img
+                    className="w-7 h-7 rounded-full"
+                    src={user.photoURL}
+                    alt=""
+                  />
+                ) : (
+                  <FaUserCircle className="text-2xl"></FaUserCircle>
+                )}
               </button>
 
               <ul
