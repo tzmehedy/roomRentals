@@ -4,7 +4,7 @@ import Sidebar from '../Shared/Sidebar';
 
 const Dashboard = () => {
     return (
-      <div className="container mx-auto flex">
+      <div className="container mx-auto flex flex-col lg:flex-row">
         <Sidebar></Sidebar>
         <div className='ml-5'>
           <Outlet></Outlet>
