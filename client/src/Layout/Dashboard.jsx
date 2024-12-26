@@ -6,7 +6,7 @@ const Dashboard = () => {
     return (
       <div className="container mx-auto flex flex-col lg:flex-row">
         <Sidebar></Sidebar>
-        <div className='ml-5'>
+        <div className='ml-5 flex-1'>
           <Outlet></Outlet>
         </div>
       </div>
