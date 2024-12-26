@@ -3,8 +3,10 @@ import {categories} from "../../../Components/Categories/CategoriesData"
 import { DateRange } from "react-date-range";
 import 'react-date-range/dist/styles.css'; 
 import 'react-date-range/dist/theme/default.css'; 
+import axios from 'axios';
 
 const AddRoom = () => {
+    const [file, setFile] = useState()
     const [state, setState] = useState([
       {
         startDate: new Date(),
@@ -12,9 +14,57 @@ const AddRoom = () => {
         key: "selection",
       },
     ]);
+
+    
+    console.log(state)
+
+    const url = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_imgbb_API_key
+    }`;
+
+    const handelAddRooms = async(e)=>{
+        e.preventDefault()
+        const form = e.target 
+        const location = form.location.value 
+        const title = form.title.value 
+        const category = form.category.value 
+        const price = form.price.value
+        const totalGuest = form.totalGuest.value 
+        const bedrooms = form.bedrooms.value 
+        const bathrooms = form.bathrooms.value 
+        const description = form.description.value 
+        const image = form.image.files[0]
+        const from = state[0].startDate;
+        const to = state[0].endDate;
+
+        const formData = new FormData()
+        formData.append("image",image)
+
+        const {data} = await axios.post(url,formData)
+
+        const roomInfo = {
+          location,
+          title,
+          category,
+          price,
+          totalGuest,
+          bedrooms,
+          bathrooms,
+          description,
+          image: data.data.display_url,
+          from,
+          to
+        };
+
+        console.log(roomInfo)
+        
+
+
+        
+    }
     return (
       <div className="p-20">
-        <form className="space-y-5">
+        <form onSubmit={handelAddRooms} className="space-y-5">
           <div className="flex gap-5">
             <div className="md:w-1/2">
               <label htmlFor="location" className="font-bold">
@@ -56,14 +106,25 @@ const AddRoom = () => {
                 name="category"
                 id=""
               >
-                {categories.map((category) => (
-                  <option value={category.label}>{category.label}</option>
+                {categories.map((category, index) => (
+                  <option value={category.label} key={index}>
+                    {category.label}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="md:w-1/2">
               <div className="border-2 w-full border-dotted flex justify-start px-4 py-4">
-                <input className="w-3/2" type="file" name="image" id="" />
+                <input
+                  onChange={(e) =>
+                    setFile(URL.createObjectURL(e.target.files[0]))
+                  }
+                  className="w-3/2"
+                  type="file"
+                  name="image"
+                  id=""
+                />
+                {file && <img className="w-10 h-10" src={file} alt="" />}
               </div>
             </div>
           </div>
@@ -75,7 +136,7 @@ const AddRoom = () => {
 
               <DateRange
                 editableDateInputs={true}
-                onChange={(item) => setState([item.selection])}
+                onBlur={(item) => setState([item.selection])}
                 moveRangeOnFirstSelection={false}
                 ranges={state}
               />

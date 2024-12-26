@@ -9,7 +9,7 @@ import { MdMenu } from "react-icons/md";
 
 const Sidebar = () => {
     const [active,setActive] = useState(false)
-    console.log(active)
+    
     return (
       <div>
         {/* Small screen navbar */}
