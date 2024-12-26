@@ -1,7 +1,7 @@
 import React from 'react';
 import { CgMenu } from "react-icons/cg";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import useAuth from '../Hooks/useAuth';
 import { toast } from 'react-toastify';
 
@@ -19,11 +19,16 @@ const NavBar = () => {
     const navLinks = (
       <>
         {user ? (
-          <li>
-            <button onClick={handelLogout} className="btn">
-              Logout
-            </button>
-          </li>
+          <>
+            <li>
+              <NavLink to={"/dashboard"}>Dashboard</NavLink>
+            </li>
+            <li>
+              <Link onClick={handelLogout} className="">
+                Logout
+              </Link>
+            </li>
+          </>
         ) : (
           <>
             <li>
@@ -68,9 +73,16 @@ const NavBar = () => {
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
                 {user ? (
-                  <li>
-                    <button onClick={handelLogout} className="btn">Logout</button>
-                  </li>
+                  <>
+                    <li>
+                      <NavLink to={"/dashboard"}>Dashboard</NavLink>
+                    </li>
+                    <li>
+                      <Link onClick={handelLogout} className="">
+                        Logout
+                      </Link>
+                    </li>
+                  </>
                 ) : (
                   <>
                     <li>
