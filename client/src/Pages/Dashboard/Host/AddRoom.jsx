@@ -4,8 +4,15 @@ import { DateRange } from "react-date-range";
 import 'react-date-range/dist/styles.css'; 
 import 'react-date-range/dist/theme/default.css'; 
 import axios from 'axios';
+import useAuth from '../../../Hooks/useAuth';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 const AddRoom = () => {
+  const {user} = useAuth()
+  const axiosSecure = useAxiosSecure()
+  
     const [file, setFile] = useState()
     const [state, setState] = useState([
       {
@@ -15,12 +22,20 @@ const AddRoom = () => {
       },
     ]);
 
-    
-    console.log(state)
-
     const url = `https://api.imgbb.com/1/upload?key=${
       import.meta.env.VITE_imgbb_API_key
     }`;
+
+    const { mutateAsync } = useMutation({
+      mutationFn: async (roomInfo) => {
+        const { data } = await axiosSecure.post("/rooms", roomInfo);
+        
+        return data;
+      },
+      onSuccess: ()=>{
+        toast.success("The room successfully added")
+      }
+    });
 
     const handelAddRooms = async(e)=>{
         e.preventDefault()
@@ -42,21 +57,39 @@ const AddRoom = () => {
 
         const {data} = await axios.post(url,formData)
 
-        const roomInfo = {
-          location,
-          title,
-          category,
-          price,
-          totalGuest,
-          bedrooms,
-          bathrooms,
-          description,
-          image: data.data.display_url,
-          from,
-          to
-        };
+        if(data.data.display_url){
+          try{
+            const roomInfo = {
+            location,
+            title,
+            category,
+            price,
+            guests:totalGuest,
+            bedrooms,
+            bathrooms,
+            description,
+            image: data.data.display_url,
+            from,
+            to,
+            host: {
+              name: user?.displayName,
+              email: user?.email,
+              image: user?.photoURL,
+            },
+          };
 
-        console.log(roomInfo)
+          await mutateAsync(roomInfo)
+          }catch(err){
+            toast.error(err.message)
+          }
+
+          
+
+        }
+
+        
+
+        
         
 
 
@@ -136,7 +169,7 @@ const AddRoom = () => {
 
               <DateRange
                 editableDateInputs={true}
-                onBlur={(item) => setState([item.selection])}
+                onChange={(item) => setState([item.selection])}
                 moveRangeOnFirstSelection={false}
                 ranges={state}
               />
