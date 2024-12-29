@@ -4,6 +4,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { Link, NavLink } from 'react-router';
 import useAuth from '../Hooks/useAuth';
 import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
+import axios from 'axios';
 
 const NavBar = () => {
   const { user, logOut } = useAuth();
@@ -41,6 +43,40 @@ const NavBar = () => {
         )}
       </>
     );
+
+    const handelBecomeAHost = () =>{
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You want to become a host!!!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Continue",
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+          const currentUserInfo = {
+          email: user?.email,
+          role: "guest",
+          status: "requested",
+        };
+        const { data } = await axios.put(
+          "http://localhost:5000/users",
+          currentUserInfo
+        )
+        if(data.modifiedCount>0){
+          toast.success("Please Wait a few moment to admin approval")
+        }
+        else{
+          toast.error("You already submitted the request. Please wait for admin approval")
+        }
+          Swal.fire({
+            title: "The request successfully submitted!",
+            icon: "success",
+          });
+        }
+      });
+    }
 
     
     return (
@@ -104,7 +140,7 @@ const NavBar = () => {
           </div>
 
           <div className="navbar-end space-x-5">
-            <button className="font-bold hidden md:inline-block">
+            <button onClick={handelBecomeAHost} className="font-bold hidden md:inline-block">
               Host Your Home
             </button>
             <div className="dropdown dropdown-end">

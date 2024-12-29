@@ -2,11 +2,16 @@ import React, { createContext, useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import auth from '../Firebase/firebase.config';
 
+import {toast} from "react-toastify"
+import axios from 'axios';
+
+
 export const AuthContext = createContext()
 
 const provider = new GoogleAuthProvider()
 
 const AuthProvider = ({children}) => {
+    
     const [user,setUser] = useState()
     const [loading, setLoading] = useState(true)
 
@@ -44,10 +49,27 @@ const AuthProvider = ({children}) => {
 
     }
 
+    const  userRole = async(currentUser) =>{
+        const currentUserInfo = {
+          email: currentUser?.email,
+          role: "guest",
+          status: "verified",
+        };
+        const { data } = await axios.put(
+          "http://localhost:5000/users",
+          currentUserInfo
+        );
+        
+        return data
+
+    }
     useEffect(()=>{
         const unSubscribe = onAuthStateChanged(auth, currentUser=>{
-            setLoading(false)
-            setUser(currentUser)
+            setUser(currentUser);
+            if(currentUser){
+                userRole(currentUser)
+            }
+            setLoading(false);
         })
 
         return ()=>{

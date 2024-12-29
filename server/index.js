@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 require("dotenv").config()
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId, Timestamp } = require("mongodb");
 
 
 const app = express();
@@ -33,6 +33,8 @@ async function run() {
   try {
 
     const roomsCollections = client.db("RoomRentals").collection("allRooms")
+
+    const userCollections = client.db("RoomRentals").collection("users")
 
     app.get("/rooms", async(req,res)=>{
       const category = req.query.category
@@ -68,7 +70,37 @@ async function run() {
       const result = await roomsCollections.deleteOne(query)
       res.send(result)
     })
-    
+
+    app.put("/users", async(req,res)=>{
+      const user = req.body 
+      const query = {email:user?.email}
+      const isExist = await userCollections.findOne(query)
+      console.log(user.status)
+
+      if(isExist){
+        if(user.status === "requested"){
+          const result = await userCollections.updateOne(query, {$set:{status: user.status}})
+          return res.send(result)
+        }
+        else{
+          return res.send(isExist)
+
+        }
+      }
+
+      const option = {upsert:true}
+
+      const updateUser = {
+        $set:{
+          ...user,  
+          Timestamp: new Date() 
+        }
+      }
+      const result = await userCollections.updateOne(query,updateUser,option)
+      
+      res.send(result)
+    })
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
