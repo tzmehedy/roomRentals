@@ -54,6 +54,21 @@ async function run() {
       const result = await roomsCollections.insertOne(roomInfo)
       res.send(result)
     })
+
+    app.get("/myListings/:email", async(req,res)=>{
+      const email = req.params.email 
+      const query = {'host.email':email}
+      const result = await roomsCollections.find(query).toArray()
+      res.send(result)
+    })
+
+    app.delete("/myListings/:id", async(req,res)=>{
+      const id= req.params.id 
+      const query = {_id: new ObjectId(id)}
+      const result = await roomsCollections.deleteOne(query)
+      res.send(result)
+    })
+    
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );

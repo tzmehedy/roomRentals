@@ -7,7 +7,7 @@ const RoomsCard = ({room}) => {
     return (
       <Link to={`/rooms/${_id}`} className="card bg-slate-100 shadow-xl p-2 space-y-3">
         <img
-          className="w-full rounded-lg transition ease-out delay-100 hover:-translate-y-1 hover:scale-90 "
+          className="w-full h-2/3 rounded-lg transition ease-out delay-100 hover:-translate-y-1 hover:scale-90 "
           src={image}
           alt=""
         />

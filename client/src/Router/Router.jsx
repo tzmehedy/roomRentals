@@ -9,6 +9,7 @@ import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Layout/Dashboard";
 import Statistics from "../Pages/Dashboard/Common/Statistics";
 import AddRoom from "../Pages/Dashboard/Host/AddRoom";
+import MyListings from "../Pages/Dashboard/Host/MyListings";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "addRoom",
         element: <AddRoom></AddRoom>
+      },
+      {
+        path: "myListings",
+        element: <MyListings></MyListings>
       }
     ]
 

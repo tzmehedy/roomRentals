@@ -8,10 +8,12 @@ import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 const AddRoom = () => {
   const {user} = useAuth()
   const axiosSecure = useAxiosSecure()
+  const navigate = useNavigate()
   
     const [file, setFile] = useState()
     const [state, setState] = useState([
@@ -34,6 +36,7 @@ const AddRoom = () => {
       },
       onSuccess: ()=>{
         toast.success("The room successfully added")
+        navigate("/dashboard/myListings")
       }
     });
 
