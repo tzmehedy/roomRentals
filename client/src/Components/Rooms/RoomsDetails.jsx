@@ -2,31 +2,34 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
-import { DateRange } from 'react-date-range';
+
 import 'react-date-range/dist/styles.css'; 
 import 'react-date-range/dist/theme/default.css'; 
+import RoomReservation from './RoomReservation';
 
 const RoomsDetails = () => {
     const params = useParams()
     const axiosSecure = useAxiosSecure()
-    const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: null,
-      key: 'selection'
-    }
-  ]);
 
-    const {data:room=[]} = useQuery({
+    const {data:room=[], isLoading} = useQuery({
         queryKey: ["roomsDetails"],
         queryFn: async()=>{
             const { data } = await axiosSecure.get(`/rooms/${params.id}`)
             return data
         }
     })
-
-    console.log(room)
     
+
+    if(isLoading) return (
+      <div className="flex justify-center items-center h-screen text-[#F09167]">
+        <span className="loading loading-bars loading-lg"></span>
+      </div>
+    );
+
+    
+
+    console.log("start date-->", new Date(room.from).toLocaleDateString());
+    console.log("End date-->", new Date(room.to).toLocaleDateString());
     return (
       <div className=" md:px-20 space-y-5">
         <div className="space-y-5">
@@ -64,21 +67,34 @@ const RoomsDetails = () => {
             <div className="divider"></div>
           </div>
 
-          <div className="border border-slate-300 rounded-lg md:w-1/3 md:p-3">
+          {/* <div className="border border-slate-300 rounded-lg md:w-1/3 md:p-3">
             <h1 className="font-bold text-2xl">${room.price}/night</h1>
             <div className="divider"></div>
 
             <DateRange
               showDateDisplay={false}
               rangeColors={["#F09167"]}
-              editableDateInputs={true}
-              onChange={(item) => setState([item.selection])}
+              onChange={(item) =>
+              {
+                setState([
+                  {
+                    startDate: new Date(room.from),
+                    endDate: new Date(room.to),
+                    key: "selection",
+                  },
+                ]);
+              }
+              }
               moveRangeOnFirstSelection={false}
               ranges={state}
             />
 
-            <button className="btn w-full  font-bold bg-[#F09167]">Reserve</button>
-          </div>
+            <button className="btn w-full  font-bold bg-[#F09167]">
+              Reserve
+            </button>
+          </div> */}
+
+          <RoomReservation key={room._id} room={room}></RoomReservation>
         </div>
       </div>
     );

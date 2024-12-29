@@ -22,6 +22,12 @@ const MyListings = () => {
     },
   });
 
+  if(isLoading) return (
+    <div className="flex justify-center items-center h-screen text-[#F09167]">
+      <span className="loading loading-bars loading-lg"></span>
+    </div>
+  );
+
   const handelUpdate = () => {};
 
   const handelDelete = (id) => {
@@ -65,6 +71,7 @@ const MyListings = () => {
           </thead>
           <tbody>
             {rooms?.map((room, index) => (
+              <>
               <tr>
                 <th>{index + 1}</th>
                 <td>{room.title}</td>
@@ -87,6 +94,8 @@ const MyListings = () => {
                   </button>
                 </td>
               </tr>
+              </>
+              
             ))}
           </tbody>
         </table>
