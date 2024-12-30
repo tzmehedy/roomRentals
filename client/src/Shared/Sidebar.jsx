@@ -71,7 +71,7 @@ const Sidebar = () => {
 
           <div className="p-5 space-y-5 bottom-0">
             <NavLink
-              to={"profile"}
+              to={"/dashboard/profile"}
               className="flex items-center gap-2 font-bold text-lg text-slate-700"
             >
               <ImProfile></ImProfile> Profile

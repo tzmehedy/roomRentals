@@ -11,6 +11,7 @@ import Statistics from "../Pages/Dashboard/Common/Statistics";
 import AddRoom from "../Pages/Dashboard/Host/AddRoom";
 import MyListings from "../Pages/Dashboard/Host/MyListings";
 import ManageUser from "../Pages/Dashboard/Admin/ManageUser";
+import Profile from "../Pages/Dashboard/Common/Profile";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
         path: "manageUser",
         element: <ManageUser></ManageUser>
       },
+      {
+        path: "profile",
+        element: <Profile></Profile>
+      }
     ],
   },
 ]);
