@@ -108,8 +108,10 @@ async function run() {
 
     app.get("/user-role/:email", async(req,res)=>{
       const email = req.params.email
+      console.log(email) 
       const query ={email:email}
-      const result = await userCollections.findOne()
+      const result = await userCollections.findOne(query)
+      console.log(result)
       res.send(result)
     })
 

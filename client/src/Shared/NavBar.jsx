@@ -140,10 +140,13 @@ const NavBar = () => {
           </div>
 
           <div className="navbar-end space-x-5">
-            <button onClick={handelBecomeAHost} className="font-bold hidden md:inline-block">
+            <button
+              onClick={handelBecomeAHost}
+              className="font-bold hidden md:inline-block"
+            >
               Host Your Home
             </button>
-            <div className="dropdown dropdown-end">
+            <div className="dropdown dropdown-end" title={user?.displayName}>
               <button
                 className="flex justify-center items-center space-x-2 border-2 px-2 py-1 rounded-2xl  "
                 tabIndex={0}

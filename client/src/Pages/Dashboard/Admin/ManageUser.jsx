@@ -33,25 +33,14 @@ const ManageUser = () => {
             <tbody>
               {users?.map((user, index) => (
                 <tr>
-                  <th>
-                    {index+1}
-                    
-                  </th>
-                  <td>
-                    {
-                        user?.email
-                    }
-                    
-                  </td>
-                  <td>
-                    {
-                        user?.role
-                    }
-                    
-                  </td>
+                  <th>{index + 1}</th>
+                  <td>{user?.email}</td>
+                  <td>{user?.role}</td>
                   <td>{user?.status}</td>
                   <th>
-                    <button className="btn btn-ghost btn-xs">Update Role</button>
+                    <button className="btn btn-sm bg-[#F09167] bg-opacity-30 px-2 py-1">
+                      Update Role
+                    </button>
                   </th>
                 </tr>
               ))}
