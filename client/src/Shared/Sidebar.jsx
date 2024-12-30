@@ -38,32 +38,35 @@ const Sidebar = () => {
           <div className="">
             <div className="p-5 space-y-5">
               <NavLink
-                to={"statistics"}
+                to={"/dashboard"}
                 className="flex items-center gap-2 font-bold text-lg text-slate-700"
               >
                 <GoGraph></GoGraph> Statistics
               </NavLink>
               <NavLink
-                to={"addRoom"}
+                to={"/dashboard/addRoom"}
                 className="flex items-center gap-2 font-bold text-lg text-slate-700"
               >
                 <FaHome></FaHome> Add Room
               </NavLink>
               <NavLink
-                to={"myListings"}
+                to={"/dashboard/myListings"}
                 className="flex items-center gap-2 font-bold text-lg text-slate-700"
               >
                 <FaList></FaList> My Listings
               </NavLink>
               <NavLink
-                to={"manageBookings"}
+                to={"/dashboard/manageUser"}
                 className="flex items-center gap-2 font-bold text-lg text-slate-700"
               >
-                <MdManageHistory className="" /> Manage Bookings
+                <MdManageHistory className="" /> Manage Users
               </NavLink>
             </div>
+            <div className='divider'>
 
-            <div className="p-5 space-y-5 absolute bottom-0">
+            </div>
+
+            <div className="p-5 space-y-5">
               <NavLink
                 to={"profile"}
                 className="flex items-center gap-2 font-bold text-lg text-slate-700"

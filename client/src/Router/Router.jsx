@@ -10,6 +10,7 @@ import Dashboard from "../Layout/Dashboard";
 import Statistics from "../Pages/Dashboard/Common/Statistics";
 import AddRoom from "../Pages/Dashboard/Host/AddRoom";
 import MyListings from "../Pages/Dashboard/Host/MyListings";
+import ManageUser from "../Pages/Dashboard/Admin/ManageUser";
 
 const router = createBrowserRouter([
   {
@@ -44,22 +45,26 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard></Dashboard>,
-    children:[
+    children: [
       {
-        path: "statistics",
-        element: <Statistics></Statistics>
+        index: true,
+        element: <Statistics></Statistics>,
       },
       {
         path: "addRoom",
-        element: <AddRoom></AddRoom>
+        element: <AddRoom></AddRoom>,
       },
       {
         path: "myListings",
-        element: <MyListings></MyListings>
-      }
-    ]
+        element: <MyListings></MyListings>,
+      },
 
-  }
+      {
+        path: "manageUser",
+        element: <ManageUser></ManageUser>
+      },
+    ],
+  },
 ]);
 
 export default router;
