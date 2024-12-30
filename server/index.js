@@ -108,11 +108,25 @@ async function run() {
 
     app.get("/user-role/:email", async(req,res)=>{
       const email = req.params.email
-      console.log(email) 
+      
       const query ={email:email}
       const result = await userCollections.findOne(query)
-      console.log(result)
+      
       res.send(result)
+    })
+
+    app.patch("/user-role-update", async(req,res)=>{
+      const updatedUser = req.body 
+      const query = {email: updatedUser?.email}
+      const updatedDoc = {
+        $set:{
+          role: updatedUser?.role,
+          status: updatedUser?.status
+        }
+      }
+      const result = await userCollections.updateOne(query, updatedDoc)
+      res.send(result)
+      
     })
 
     console.log(
