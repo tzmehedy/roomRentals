@@ -1,5 +1,6 @@
 const express = require("express")
 const cors = require("cors")
+const jwt = require("jsonwebtoken")
 require("dotenv").config()
 const { MongoClient, ServerApiVersion, ObjectId, Timestamp } = require("mongodb");
 
@@ -8,7 +9,12 @@ const app = express();
 
 const port = process.env.PORT || 5000
 
-app.use(cors())
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+  credentials:true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json())
 
 app.get("/", (req,res)=>{
@@ -35,6 +41,18 @@ async function run() {
     const roomsCollections = client.db("RoomRentals").collection("allRooms")
 
     const userCollections = client.db("RoomRentals").collection("users")
+
+
+
+
+    // jwt 
+
+    app.post("/jwt", async(req,res)=>{
+      const user = req.body 
+      const token = jwt.sign(user, process.env.SECRET_KEY,{expiresIn:'3h'})
+      console.log(token)
+      res.send(token)
+    })
 
     app.get("/rooms", async(req,res)=>{
       const category = req.query.category
@@ -75,7 +93,7 @@ async function run() {
       const user = req.body 
       const query = {email:user?.email}
       const isExist = await userCollections.findOne(query)
-      console.log(user.status)
+      
 
       if(isExist){
         if(user.status === "requested"){
@@ -108,10 +126,8 @@ async function run() {
 
     app.get("/user-role/:email", async(req,res)=>{
       const email = req.params.email
-      
       const query ={email:email}
       const result = await userCollections.findOne(query)
-      
       res.send(result)
     })
 
