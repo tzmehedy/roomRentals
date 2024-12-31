@@ -46,7 +46,20 @@ async function run() {
     const userCollections = client.db("RoomRentals").collection("users")
 
 
+    const verifyToken = (req,res,next) =>{
+      const token = req.cookies.token 
+      if(!token) return req.status(401).send({message:"unauthorized access"})
+      
+      jwt.verify(token, process.env.SECRET_KEY,(err,decode)=>{
+        if(err) {
+          return req.status(401).send({message:"unauthorized access"})
+        }
 
+        req.userEmail = decode.email 
+        next()
+      });
+
+    }
 
     // jwt 
 
@@ -136,7 +149,7 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/users", async(req,res)=>{
+    app.get("/users",verifyToken, async(req,res)=>{
       const result = await userCollections.find().toArray()
       res.send(result)
     })

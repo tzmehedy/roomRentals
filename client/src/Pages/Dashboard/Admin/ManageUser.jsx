@@ -14,13 +14,10 @@ const ManageUser = () => {
       setCurrentUser(user);
     }
 
-    console.log(open)
-    
-
     const { data:users , refetch,isLoading } = useQuery({
       queryKey: ["users"],
       queryFn: async () => {
-        const { data } = await axiosSecure.get("/users");
+        const { data } = await axiosSecure.get("/users",{withCredentials:true});
         return data;
       },
     });
