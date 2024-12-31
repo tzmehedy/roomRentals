@@ -1,6 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const jwt = require("jsonwebtoken")
+const cookieParser = require("cookie-parser")
 require("dotenv").config()
 const { MongoClient, ServerApiVersion, ObjectId, Timestamp } = require("mongodb");
 
@@ -10,12 +11,14 @@ const app = express();
 const port = process.env.PORT || 5000
 
 const corsOptions = {
-  origin: ["http://localhost:5173"],
-  credentials:true
+  origin: ["http://localhost:5173", "http://localhost:5000"],
+  credentials: true,
+  optionSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json())
+app.use(cookieParser())
 
 app.get("/", (req,res)=>{
     res.send("Room rental is coming")
@@ -50,8 +53,22 @@ async function run() {
     app.post("/jwt", async(req,res)=>{
       const user = req.body 
       const token = jwt.sign(user, process.env.SECRET_KEY,{expiresIn:'3h'})
-      console.log(token)
-      res.send(token)
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        })
+        .send({ success: true});
+    })
+
+    app.get("/logOut", async(req,res)=>{
+      res.clearCookie("token", {
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 0
+      }).send({success:true})
+
     })
 
     app.get("/rooms", async(req,res)=>{

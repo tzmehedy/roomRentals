@@ -53,8 +53,13 @@ const AuthProvider = ({children}) => {
         const { data } = await axios.post(
           "http://localhost:5000/jwt",
           { email },
-          { withCredentials: true }
+          {withCredentials:true}
         );
+        return data
+    }
+
+    const removeToken = async()=>{
+        const { data } = await axios.get("http://localhost:5000/logOut", {withCredentials:true})
         return data
     }
 
@@ -76,8 +81,12 @@ const AuthProvider = ({children}) => {
         const unSubscribe = onAuthStateChanged(auth, currentUser=>{
             setUser(currentUser);
             if(currentUser){
-                getToken(currentUser?.email)
+                console.log(currentUser)
+                getToken(currentUser.email)
                 userRole(currentUser)
+            }
+            else{
+                removeToken()
             }
             setLoading(false);
         })
