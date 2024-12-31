@@ -26,7 +26,7 @@ app.get("/", (req,res)=>{
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
-  if (!token) return req.status(401).send({ message: "unauthorized access" });
+  if (!token) return res.status(401).send({ message: "unauthorized access" });
 
   jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
     if (err) {
@@ -63,16 +63,25 @@ async function run() {
 
     const userCollections = client.db("RoomRentals").collection("users")
 
-    const verifyAdmin = async (req, res, next) => {
+    const verifyAdmin = async(req, res, next) => {
       const user = req.user;
       const query = { email: user?.email };
       const result = await userCollections.findOne(query);
       if (!result || result?.role !=="admin") {
-        return res.status(401).send({ message: "Unauthorized Access" });
+        return res.status(401).send({ message: "Unauthorized Access admin" });
       }
       next();
       
     };
+    const verifyHost = async (req,res,next)=>{
+      const user = req.user 
+      const query = {email:user?.email}
+      const result = await userCollections.findOne(query)
+      if(!result || result?.role !== "host"){
+        return res.status(401).send({ message: "Unauthorized Access" });
+      }
+      next()
+    }
 
     // jwt 
 
@@ -105,32 +114,34 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/rooms/:id", async(req,res)=>{
+    app.get("/rooms/:id",verifyToken, async(req,res)=>{
       const id = req.params.id 
       const query = {_id : new ObjectId(id)}
       const result = await roomsCollections.findOne(query)
       res.send(result)
     })
 
-    app.post("/rooms", async(req,res)=>{
+    app.post("/rooms",verifyToken, verifyHost, async(req,res)=>{
       const roomInfo = req.body
       const result = await roomsCollections.insertOne(roomInfo)
       res.send(result)
     })
 
-    app.get("/myListings/:email", async(req,res)=>{
-      const email = req.params.email 
-      const query = {'host.email':email}
-      const result = await roomsCollections.find(query).toArray()
-      res.send(result)
-    })
+    app.get("/myListings/:email",verifyToken,verifyHost,  async (req, res) => {
+      const email = req.params.email;
+      const user = req.user 
+      if(email !== user.email) return res.status(403).send({message: "Forbidden Access"})
+      const query = { "host.email": email };
+      const result = await roomsCollections.find(query).toArray();
+      res.send(result);
+    });
 
-    app.delete("/myListings/:id", async(req,res)=>{
-      const id= req.params.id 
-      const query = {_id: new ObjectId(id)}
-      const result = await roomsCollections.deleteOne(query)
-      res.send(result)
-    })
+    app.delete("/myListings/:id", verifyToken, verifyHost, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await roomsCollections.deleteOne(query);
+      res.send(result);
+    });
 
     app.put("/users", async(req,res)=>{
       const user = req.body 
@@ -174,7 +185,7 @@ async function run() {
       res.send(result)
     })
 
-    app.patch("/user-role-update", async(req,res)=>{
+    app.patch("/user-role-update",verifyToken,verifyAdmin, async(req,res)=>{
       const updatedUser = req.body 
       const query = {email: updatedUser?.email}
       const updatedDoc = {

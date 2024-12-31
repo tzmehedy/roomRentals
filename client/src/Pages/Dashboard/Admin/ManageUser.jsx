@@ -21,8 +21,6 @@ const ManageUser = () => {
         return data;
       },
     });
-
-  
     return (
       <div>
         <div className="overflow-x-auto p-20">

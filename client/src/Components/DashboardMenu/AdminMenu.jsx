@@ -6,7 +6,7 @@ const AdminMenu = () => {
     return (
       <div>
         <MenuItems
-          address="/dashboard/manageUser"
+          address="manageUser"
           label="Manage Users"
           icon={MdManageHistory}
         ></MenuItems>

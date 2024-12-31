@@ -6,12 +6,12 @@ const HostMenu = () => {
     return (
       <div>
         <MenuItems
-          address="/dashboard/addRoom"
+          address="addRoom"
           label="Add Room"
           icon={FaHome}
         ></MenuItems>
         <MenuItems
-          address="/dashboard/myListings"
+          address="myListings"
           label="My Listings"
           icon={FaList}
         ></MenuItems>

@@ -8,13 +8,11 @@ import { toast } from 'react-toastify';
 
 const UpdateUserRole = ({ setOpen, user,open, handelOpen,refetch }) => {
   const axiosSecure = useAxiosSecure()
-  console.log(user)
-
-  const { mutateAsync } = useMutation({
+  const { mutateAsync ,isPending} = useMutation({
     mutationFn: async (updatedUser) => {
       const { data } = await axiosSecure.patch(
         "/user-role-update",
-        updatedUser
+        updatedUser,
       );
       return data;
     },
@@ -24,6 +22,8 @@ const UpdateUserRole = ({ setOpen, user,open, handelOpen,refetch }) => {
       setOpen(false)
     },
   });
+
+ 
 
   const handelUpdate = async(e) =>{
     e.preventDefault()

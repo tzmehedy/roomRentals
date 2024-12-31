@@ -6,7 +6,7 @@ const GuestMenu = () => {
   return (
     <div className="space-y-2">
       <MenuItems
-        address="/dashboard/myBookings"
+        address="myBookings"
         label="My Bookings"
         icon={FaBook}
       ></MenuItems>
