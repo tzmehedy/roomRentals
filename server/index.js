@@ -24,6 +24,22 @@ app.get("/", (req,res)=>{
     res.send("Room rental is coming")
 })
 
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return req.status(401).send({ message: "unauthorized access" });
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
+    if (err) {
+      return res.status(401).send({ message: "unauthorized access" });
+    }
+
+    req.user = decode;
+    next();
+  });
+};
+
+
+
 
 
 const uri =
@@ -38,6 +54,8 @@ const client = new MongoClient(uri, {
   },
 });
 
+
+
 async function run() {
   try {
 
@@ -45,21 +63,16 @@ async function run() {
 
     const userCollections = client.db("RoomRentals").collection("users")
 
-
-    const verifyToken = (req,res,next) =>{
-      const token = req.cookies.token 
-      if(!token) return req.status(401).send({message:"unauthorized access"})
+    const verifyAdmin = async (req, res, next) => {
+      const user = req.user;
+      const query = { email: user?.email };
+      const result = await userCollections.findOne(query);
+      if (!result || result?.role !=="admin") {
+        return res.status(401).send({ message: "Unauthorized Access" });
+      }
+      next();
       
-      jwt.verify(token, process.env.SECRET_KEY,(err,decode)=>{
-        if(err) {
-          return req.status(401).send({message:"unauthorized access"})
-        }
-
-        req.userEmail = decode.email 
-        next()
-      });
-
-    }
+    };
 
     // jwt 
 
@@ -149,7 +162,7 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/users",verifyToken, async(req,res)=>{
+    app.get("/users",verifyToken,verifyAdmin, async(req,res)=>{
       const result = await userCollections.find().toArray()
       res.send(result)
     })
